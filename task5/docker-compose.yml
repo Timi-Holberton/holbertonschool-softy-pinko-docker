@@ -1,0 +1,28 @@
+services:  # Définition des services (conteneurs) de ton application
+  back-end:  # Service du serveur Flask (API)
+    build:  # Indique que l'image doit être construite à partir d'un Dockerfile
+      context: ./back-end  # Dossier contenant le Dockerfile et le code back-end
+      dockerfile: Dockerfile  # Nom du fichier Dockerfile à utiliser
+    image: softy-pinko-back-end:task5  # Nom attribué à l’image construite
+
+
+  front-end:  # Service du serveur Nginx (site statique)
+    build:
+      context: ./front-end  # Dossier contenant le Dockerfile et les fichiers front-end
+      dockerfile: Dockerfile  # Nom du fichier Dockerfile à utiliser
+    image: softy-pinko-front-end:task5  # Nom attribué à l’image construite
+    depends_on:
+      - back-end # attendre que le back-end soit prêt
+
+  proxy:
+    build:
+      context: ./proxy   # chemin vers le Dockerfile du proxy
+    image: softy-pinko-proxy:task5  # nom et tag de l'image
+    ports:
+      - "80:80"  # mapping du port 80 du container vers le host
+    depends_on:
+      - front-end  # attendre que le front-end soit prêt
+      - back-end   # attendre que le back-end soit prêt
+
+# Ce docker-compose.yml configure trois services : back-end (Flask API), front-end (site statique) et proxy (reverse proxy Nginx)
+# Le proxy expose le port 80 vers l’extérieur, les autres ports restent internes entre containers.
