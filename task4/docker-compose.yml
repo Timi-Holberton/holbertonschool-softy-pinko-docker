@@ -1,0 +1,18 @@
+services:  # Définition des services (conteneurs) de ton application
+  back-end:  # Service du serveur Flask (API)
+    build:  # Indique que l'image doit être construite à partir d'un Dockerfile
+      context: ./back-end  # Dossier contenant le Dockerfile et le code back-end
+      dockerfile: Dockerfile  # Nom du fichier Dockerfile à utiliser
+    image: softy-pinko-back-end:task4  # Nom attribué à l’image construite
+    ports:
+      - "5252:5252"  # Mappe le port 5252 du conteneur vers le port 5252 de l’hôte
+
+  front-end:  # Service du serveur Nginx (site statique)
+    build:
+      context: ./front-end  # Dossier contenant le Dockerfile et les fichiers front-end
+      dockerfile: Dockerfile  # Nom du fichier Dockerfile à utiliser
+    image: softy-pinko-front-end:task4  # Nom attribué à l’image construite
+    ports:
+      - "9000:9000"  # Mappe le port 80 du conteneur Nginx vers le port 8080 de l’hôte
+    depends_on:
+      - back-end  # Assure que le back-end est démarré avant le front-end
